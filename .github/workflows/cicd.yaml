@@ -98,6 +98,10 @@ jobs:
           script: |
             # ECR에서 최신 Docker 이미지 pull
             docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest
+            
+            # 기존 컨테이너 중지 및 제거
+            docker stop wellness-model || true
+            docker rm wellness-model || true
 
             # 새로운 Docker 컨테이너 실행 (8001 포트로)
             docker run -d -p 8001:8001 \
