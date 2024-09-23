@@ -58,10 +58,10 @@ jobs:
           docker build -t wellnessmodel:${{ github.sha }} .
 
           # GitHub SHA로 태그
-          docker tag wellnessapp:${{ github.sha }} ${{ secrets.ECR_REPOSITORY_URI }}:${{ github.sha }}
+          docker tag wellnessmodel:${{ github.sha }} ${{ secrets.ECR_REPOSITORY_URI }}:${{ github.sha }}
 
           # latest로 태그
-          docker tag wellnessapp:${{ github.sha }} ${{ secrets.ECR_REPOSITORY_URI }}:latest
+          docker tag wellnessmodel:${{ github.sha }} ${{ secrets.ECR_REPOSITORY_URI }}:latest
 
       # Docker 이미지 푸시
       - name: Push Docker image to ECR
