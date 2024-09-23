@@ -48,14 +48,14 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      # 퍼블릭 ECR 로그인을 위한 설정
+      # AWS ECR 로그인을 위한 설정
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
       # Docker 이미지 빌드 및 태깅
       - name: Build Docker image
         run: |
-          docker build -t wellnessapp:${{ github.sha }} .
+          docker build -t wellnessmodel:${{ github.sha }} .
 
           # GitHub SHA로 태그
           docker tag wellnessapp:${{ github.sha }} ${{ secrets.ECR_REPOSITORY_URI }}:${{ github.sha }}
@@ -72,7 +72,7 @@ jobs:
   deploy_dev:
     name: Deploy to Development on EC2
     runs-on: ubuntu-latest
-    needs: build
+    #needs: build
     if: github.ref == 'refs/heads/dev'
 
     steps:
@@ -82,6 +82,10 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      # AWS ECR 로그인을 위한 설정 (개발 환경)
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
 
       # EC2에 SSH로 연결하여 Docker 이미지 배포 (개발 환경)
       - name: Deploy on Dev EC2
@@ -120,6 +124,10 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      # AWS ECR 로그인을 위한 설정 (프로덕션 환경)
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
 
       # EC2에 SSH로 연결하여 Docker 이미지 배포 (프로덕션 환경)
       - name: Deploy on Prod EC2
